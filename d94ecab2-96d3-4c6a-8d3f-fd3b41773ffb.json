@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {},
+  "functions": [],
+  "variables": {},
+  "resources": [
+        {
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2021-06-01",
+        "name": "DataLake_encryption",
+        "location": "West Europe",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "properties": {
+          "displayName": "Enforce encryption on Data Lake Store accounts",
+          "enforcementMode": "Default",
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/a7ff3161-0087-490a-9ad9-ad6217f4f43a"
+      }
+    } 
+  ],
+  "outputs": {}
+}

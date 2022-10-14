@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {},
+  "functions": [],
+  "variables": {},
+  "resources": [
+        {
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2021-06-01",
+        "name": "SQLdb_ThreatDetection",
+        "location": "West Europe",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "properties": {
+          "displayName": "Deploy Threat Detection on SQL servers",
+          "enforcementMode": "Default",
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/36d49e87-48c4-4f2e-beed-ba4ed02b71f5"
+      }
+    } 
+  ],
+  "outputs": {}
+}

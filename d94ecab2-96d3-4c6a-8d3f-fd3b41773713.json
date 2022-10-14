@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "AllowedSASKUs": {
+      "type": "array"
+    }
+  },
+  "functions": [],
+  "variables": {},
+  "resources": [
+        {
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2021-06-01",
+        "name": "SAallowedSKU",
+        "location": "West Europe",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "properties": {
+          "displayName": "Allowed storage account SKUs",
+          "enforcementMode": "Default",
+          "parameters":{
+            "listOfAllowedSKUs": {
+              "value": "[parameters('AllowedSASKUs')]"
+            }
+          },
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/7433c107-6db4-4ad1-b57a-a76dce0154a1"
+      }
+    } 
+  ],
+  "outputs": {}
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "AllowedRGLocations": {
+      "type": "array"
+    }
+  },
+  "functions": [],
+  "variables": {},
+  "resources": [
+        {
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2021-06-01",
+        "name": "RGallowedLocations",
+        "location": "West Europe",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "properties": {
+          "displayName": "Allowed locations for resource groups",
+          "enforcementMode": "Default",
+          "parameters":{
+            "listOfAllowedLocations": {
+              "value": "[parameters('AllowedRGLocations')]"
+            }
+          },
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988"
+      }
+    } 
+  ],
+  "outputs": {}
+}

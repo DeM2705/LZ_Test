@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "AllowedVMSKUs": {
+      "type": "array"
+    }
+  },
+  "functions": [],
+  "variables": {},
+  "resources": [
+        {
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2021-06-01",
+        "name": "AllowedVMSKU",
+        "location": "West Europe",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "properties": {
+          "displayName": "Allowed virtual machine SKUs",
+          "enforcementMode": "Default",
+          "parameters": {
+            "listOfAllowedSKUs": {
+              "value": "[parameters('AllowedVMSKUs')]"
+            }
+          },
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/cccc23c7-8427-4f53-ad12-b6a63eb452b3"
+      }
+    } 
+  ],
+  "outputs": {}
+}

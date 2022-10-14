@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ResourceTypesWithDiagnosticLogsEnabled": {
+      "type": "array"
+    }
+  },
+  "functions": [],
+  "variables": {},
+  "resources": [
+        {
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2021-06-01",
+        "name": "ISO27001",
+        "location": "West Europe",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "properties": {
+          "displayName": "ISO 27001:2013",
+          "enforcementMode": "Default",
+          "parameters":{
+            "listOfResourceTypesWithDiagnosticLogsEnabled": {
+              "value": "[parameters('ResourceTypesWithDiagnosticLogsEnabled')]"
+            }
+          },
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/89c6cddc-1c73-4ac1-b19c-54d1a15a42f2"
+      }
+    } 
+  ],
+  "outputs": {}
+}
