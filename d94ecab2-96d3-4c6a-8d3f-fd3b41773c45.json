@@ -1,11 +1,7 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-  "parameters": {
-    "location": {
-      "type": "string"
-    }
-  },
+  "parameters": {},
   "functions": [],
   "variables": {},
   "resources": [
@@ -13,7 +9,7 @@
         "type": "Microsoft.Authorization/policyAssignments",
         "apiVersion": "2021-06-01",
         "name": "IaaSAntimalware",
-        "location": "[parameters('location')]",
+        "location": "westeurope",
         "identity": {
           "type": "SystemAssigned"
         },
