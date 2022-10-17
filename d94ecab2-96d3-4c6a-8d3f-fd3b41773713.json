@@ -25,7 +25,7 @@
               "value": "[parameters('AllowedSASKUs')]"
             }
           },
-          "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/7433c107-6db4-4ad1-b57a-a76dce0154a1"
+          "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/7433c107-6db4-4ad1-b57a-a76dce0154a1"
       }
     } 
   ],
