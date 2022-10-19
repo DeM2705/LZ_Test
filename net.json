@@ -8,6 +8,12 @@
             "description": "Organization name. For example: Contoso"
           }
         },
+        "deployFW":{
+          "type":"bool",
+          "metadata":{
+            "description": "Parameter for Firewall deployment"
+          }
+        },
         "vnet-address-prefix": {
           "type": "string",
           "metadata": {
@@ -25,12 +31,6 @@
           "type": "string",
           "metadata": {
             "displayName": "DMZ subnet address prefix"
-          }
-        },
-        "app-gateway-subnet-address-prefix": {
-          "type": "string",
-          "metadata": {
-            "displayName": "Application Gateway subnet address prefix"
           }
         },
         "gateway-subnet-address-prefix": {
@@ -63,6 +63,7 @@
       "variables": {
         "deployment-prefix": "[concat(parameters('organization'), '-sharedsvcs')]",
         "vnet-name": "[concat(variables('deployment-prefix'), '-vnet')]",
+        "vpngw-name": "[concat(variables('deployment-prefix'), '-gw')]",
         "ddos-protection-plan-name": "[concat(variables('deployment-prefix'), '-ddos-plan')]",
         "ddos-protection-plan-id": {
           "id": "[resourceId('Microsoft.Network/ddosProtectionPlans', variables('ddos-protection-plan-name'))]"
@@ -93,13 +94,6 @@
             "service-endpoints": []
           },
           {
-            "name": "AppGateway",
-            "address-prefix": "[parameters('app-gateway-subnet-address-prefix')]",
-            "network-security-group": "",
-            "user-defined-route": "",
-            "service-endpoints": []
-          },
-          {
             "name": "GatewaySubnet",
             "address-prefix": "[parameters('gateway-subnet-address-prefix')]",
             "network-security-group": "",
@@ -107,6 +101,7 @@
             "service-endpoints": []
           },
           {
+            "condition": "[equals(parameters('deployFW'), 'true')]",
             "name": "AzureFirewallSubnet",
             "address-prefix": "[parameters('azure-firewall-subnet-address-prefix')]",
             "network-security-group": "",
@@ -210,6 +205,54 @@
                 "enabled": true
               }
             ]
+          }
+        },
+        {
+          "type": "Microsoft.Network/publicIPAddresses",
+          "apiVersion": "2020-11-01",
+          "name": "[concat(variables('vpngw-name'), '-pip')]",
+          "location": "[resourceGroup().location]",
+          "tags": {
+            "displayName": "[concat(variables('vpngw-name'), '-pip')]"
+          },
+          "properties": {
+            "publicIPAllocationMethod": "Dynamic",
+            "dnsSettings": {
+              "domainNameLabel": "[concat(variables('vpngw-name'), '-pip')]"
+            }
+          }
+        },
+        {
+          "name": "[variables('vpngw-name')]",
+          "type": "Microsoft.Network/virtualNetworkGateways",
+          "apiVersion": "2020-11-01",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('vpngw-name'), '-pip'))]",
+            "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet-name'))]"
+          ],
+          "properties": {
+            "ipConfigurations": [
+              {
+                "name": "vnetGatewayConfig",
+                "properties": {
+                  "privateIPAllocationMethod": "Dynamic",
+                  "subnet": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnet-name'), 'GatewaySubnet')]"
+                  },
+                  "publicIPAddress": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('vpngw-name'), '-pip'))]"
+                  }
+                }
+              }
+            ],
+            "sku": {
+              "name": "Basic",
+              "tier": "Basic"
+            },
+            "gatewayType": "Vpn",
+            "vpnType": "PolicyBased",
+            "enableBgp": true
           }
         }
       ],
